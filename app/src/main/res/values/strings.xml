@@ -18,5 +18,6 @@
     <string name="switch_off">Switch is Off</string>
     <string name="share_info">ListItemsActivity passed: My information to share.</string>
 
-
+    <string name="start_button">Start Chat</string>
+    <string name="send_button">Send</string>
 </resources>
