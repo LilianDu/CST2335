@@ -1,8 +1,12 @@
 package com.example.a29751.androidlabs;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +18,15 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+
+
 public class ChatWindow extends AppCompatActivity {
 
+    private String ACTIVITY_NAME = "ChatWindow";
+
     private ArrayList<String> sendList = new ArrayList<>();
+    ChatDatabaseHelper cdbHelper;
+    SQLiteDatabase db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,15 +37,51 @@ public class ChatWindow extends AppCompatActivity {
 
         final ChatAdapter messageAdapter = new ChatAdapter(this);
         listView.setAdapter(messageAdapter);
+//database processing...
+        Log.i("ChatWindow","newHelper");
+        cdbHelper = new ChatDatabaseHelper(this);
+        db = cdbHelper.getWritableDatabase();
+        Log.i(ACTIVITY_NAME,"SQLiteDatabase");
+
+        Cursor cur = db.rawQuery("select * from " + cdbHelper.TABLE_NAME,null);
+        int column = cur.getCount();
+        cur.moveToFirst();
+        while(!cur.isAfterLast()){
+            String message = cur.getString(cur.getColumnIndex(ChatDatabaseHelper.MESSAGE_HEADER));
+            Log.i(ACTIVITY_NAME, "SQL MESSAGE:" + message);
+            sendList.add(message);
+            messageAdapter.notifyDataSetChanged();
+            cur.moveToNext();
+        }
+        Log.i(ACTIVITY_NAME, "Cursor’s  column count =" + cur.getColumnCount());
+
+        for(int i = 0; i <cur.getColumnCount();i++){
+            System.out.println(cur.getColumnName(i)+ "-----");
+        }
 
         btSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendList.add(edText.getText().toString());
+                String sendText = edText.getText().toString();
+
+                sendList.add(sendText);
                 messageAdapter.notifyDataSetChanged();
+
+                ContentValues newData = new ContentValues();
+                newData.put(cdbHelper.MESSAGE_HEADER, sendText);
+                //Then insert
+                db.insert(cdbHelper.TABLE_NAME,null , newData);
+
                 edText.setText("");
             }
         });
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        cdbHelper.close();
+
     }
 
     private class ChatAdapter extends ArrayAdapter<String>{
@@ -71,5 +117,6 @@ public class ChatWindow extends AppCompatActivity {
             return result;
         }
     }
+
 }
 
