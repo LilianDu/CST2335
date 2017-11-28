@@ -18,7 +18,13 @@
     <string name="switch_on">开关打开</string>
     <string name="switch_off">开关关闭</string>
     <string name="share_info">列表界面传递消息: 我分享了信息.</string>
+    <string name="initialText">你好</string>
+
+    <string name="current_t">当前温度</string>
+    <string name="min_t">最小温度</string>
+    <string name="max_t">最大温度</string>
 
     <string name="start_button">开始聊天</string>
     <string name="send_button">发送</string>
+    <string name="weather_button">天气预报</string>
 </resources>

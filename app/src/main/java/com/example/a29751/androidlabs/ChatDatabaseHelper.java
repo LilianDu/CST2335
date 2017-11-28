@@ -11,7 +11,7 @@ import android.util.Log;
 
 public class ChatDatabaseHelper extends SQLiteOpenHelper{
     public final static String DATABASE_NAME = "Message.db";
-    public final static int VERSION_NUM = 1;
+    public final static int VERSION_NUM = 2;
     public final static String TABLE_NAME = "MYTable";
     public final static String ID_HEADER = "ID" ;
     public final static String MESSAGE_HEADER = "MESSAGE";
@@ -42,7 +42,7 @@ public class ChatDatabaseHelper extends SQLiteOpenHelper{
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
-        Log.i("ChatDatabaseHelper", "Calling onUpgrade, oldVersion=" + oldVersion + "newVersion="  + newVersion);
+        Log.i("ChatDatabaseHelper", "Calling onUpgrade, oldVersion=" + oldVersion + ", newVersion="  + newVersion);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class ChatDatabaseHelper extends SQLiteOpenHelper{
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME); //delete what was there previously
         onCreate(db);
         Log.i("ChatDatabaseHelper", "Calling onCreate");
-        Log.i("ChatDatabaseHelper", "Calling onDowngrade, newVersion=" + newVersion + "oldVersion=" + oldVersion);
+        Log.i("ChatDatabaseHelper", "Calling onDowngrade, newVersion=" + newVersion + ", oldVersion=" + oldVersion);
 
     }
 

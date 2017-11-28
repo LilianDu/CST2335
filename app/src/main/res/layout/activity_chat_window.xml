@@ -22,7 +22,7 @@
         android:layout_alignBottom="@+id/sendButton"
         android:layout_marginEnd="26dp"
         android:layout_toStartOf="@+id/sendButton"
-        android:text="TextView"
+        android:text="@string/initialText"
         android:layout_alignParentStart="true" />
 
     <Button
