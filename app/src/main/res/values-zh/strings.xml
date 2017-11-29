@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AndroidLabs</string>
+
+    <string name="app_name">安卓实验</string>
     <string name="hello_message">你好!</string>
     <string name="ButtonText">这是一个按钮</string>
     <string name="login_label">登录</string>
@@ -27,4 +28,8 @@
     <string name="start_button">开始聊天</string>
     <string name="send_button">发送</string>
     <string name="weather_button">天气预报</string>
+
+    <string name="delButton">删除这条消息</string>
+    <string name="textId">第几条消息 </string>
+    <string name="textMessage">在这里输入消息 </string>
 </resources>

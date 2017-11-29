@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +27,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import static java.lang.Thread.sleep;
 
 public class WeatherForecast extends AppCompatActivity {
     public ProgressBar pb;
@@ -88,10 +91,13 @@ public class WeatherForecast extends AppCompatActivity {
 
                         currentT = getResources().getString(R.string.current_t)+": "+ parser.getAttributeValue(null, "value")+" °C";
                         publishProgress(25);
+                        SystemClock.sleep(300);
                         minT = getResources().getString(R.string.min_t)+": "+parser.getAttributeValue(null, "min")+" °C";
                         publishProgress(50);
+                        SystemClock.sleep(300);
                         maxT = getResources().getString(R.string.max_t)+": "+parser.getAttributeValue(null, "max")+" °C";
                         publishProgress(75);
+                        SystemClock.sleep(300);
 
 
                     }else if(name.equals("weather")) {
@@ -159,6 +165,8 @@ public class WeatherForecast extends AppCompatActivity {
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
             pb.setVisibility(View.VISIBLE);
+
+
             pb.setProgress(values[0]);
         }
 

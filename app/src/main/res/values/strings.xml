@@ -26,4 +26,8 @@
     <string name="start_button">Start Chat</string>
     <string name="send_button">Send</string>
     <string name="weather_button">WeatherForecast</string>
+
+    <string name="delButton">DELETE THIS MESSAGE</string>
+    <string name="textId">ID= </string>
+    <string name="textMessage">MessageHere </string>
 </resources>

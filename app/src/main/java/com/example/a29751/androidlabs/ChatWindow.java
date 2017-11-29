@@ -1,7 +1,10 @@
 package com.example.a29751.androidlabs;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
@@ -10,9 +13,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -25,8 +30,10 @@ public class ChatWindow extends AppCompatActivity {
     private String ACTIVITY_NAME = "ChatWindow";
 
     private ArrayList<String> sendList = new ArrayList<>();
-    ChatDatabaseHelper cdbHelper;
-    SQLiteDatabase db;
+    public ChatDatabaseHelper cdbHelper;
+    public SQLiteDatabase db;
+    public Cursor cur;
+    public boolean isFrameExist;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +41,16 @@ public class ChatWindow extends AppCompatActivity {
         ListView listView = (ListView)findViewById(R.id.chatView);
         final EditText edText = (EditText)findViewById(R.id.textSend);
         Button btSend = (Button)findViewById(R.id.sendButton);
+       //Lab7
+        isFrameExist = (FrameLayout)findViewById(R.id.frameL)!=null;
+
+        if(isFrameExist){//tablet layout-at least 600 pixels
+
+        }else{//phone layout
+
+        }
+
+
 
         final ChatAdapter messageAdapter = new ChatAdapter(this);
         listView.setAdapter(messageAdapter);
@@ -43,7 +60,7 @@ public class ChatWindow extends AppCompatActivity {
         db = cdbHelper.getWritableDatabase();
         Log.i(ACTIVITY_NAME,"SQLiteDatabase");
 
-        Cursor cur = db.rawQuery("select * from " + cdbHelper.TABLE_NAME,null);
+        cur = db.rawQuery("select * from " + cdbHelper.TABLE_NAME,null);
         int column = cur.getCount();
         cur.moveToFirst();
         while(!cur.isAfterLast()){
@@ -73,6 +90,30 @@ public class ChatWindow extends AppCompatActivity {
                 db.insert(cdbHelper.TABLE_NAME,null , newData);
 
                 edText.setText("");
+            }
+        });
+
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(isFrameExist){//tablet layout-at least 600 pixels
+                    Fragment newFragment = new Fragment();
+                    Bundle args = new Bundle();
+                    args.putString("message","newFragment");
+                    args.putLong("Database id",id);
+                    newFragment.setArguments(args);
+
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    //transaction.add(R.id.frameL,newFragment);
+                    transaction.replace(R.id.frameL, newFragment);
+                    transaction.addToBackStack(null);
+
+                    // Commit the transaction
+                    transaction.commit();
+                }else{//phone layout
+                    startActivity(new Intent(ChatWindow.this,MessageDetails.class));
+                }
             }
         });
     }
@@ -115,6 +156,11 @@ public class ChatWindow extends AppCompatActivity {
             message.setText(getItem(position));
 
             return result;
+        }
+
+        public long getItemId(int position){
+            cur.moveToPosition(position);
+            return cur.getLong(cur.getColumnIndex(ChatDatabaseHelper.ID_HEADER));
         }
     }
 
