@@ -1,5 +1,6 @@
 package com.example.a29751.androidlabs;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.ContentValues;
@@ -20,6 +21,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -34,6 +36,9 @@ public class ChatWindow extends AppCompatActivity {
     public SQLiteDatabase db;
     public Cursor cur;
     public boolean isFrameExist;
+    private final int RQCODE = 10;
+    FragmentTransaction transaction;
+    MessageFragment newFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,27 +100,57 @@ public class ChatWindow extends AppCompatActivity {
 
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @SuppressLint("RestrictedApi")
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Bundle args = new Bundle();
+                String message = cur.getString(position);
+                args.putString("message",message);
+                args.putLong("ID",id);
                 if(isFrameExist){//tablet layout-at least 600 pixels
-                    Fragment newFragment = new Fragment();
-                    Bundle args = new Bundle();
-                    args.putString("message","newFragment");
-                    args.putLong("Database id",id);
+                    newFragment = new MessageFragment(ChatWindow.this);
+
                     newFragment.setArguments(args);
 
-                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction = getFragmentManager().beginTransaction();
                     //transaction.add(R.id.frameL,newFragment);
                     transaction.replace(R.id.frameL, newFragment);
                     transaction.addToBackStack(null);
 
                     // Commit the transaction
                     transaction.commit();
-                }else{//phone layout
-                    startActivity(new Intent(ChatWindow.this,MessageDetails.class));
+                }else//phone layout
+                {
+                    startActivityForResult(new Intent(ChatWindow.this, MessageDetails.class), RQCODE, args);
                 }
+
+
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(requestCode == RQCODE){
+            Log.i(ACTIVITY_NAME,"Returned to chatWindow.onActivityResult");
+        }
+        if(resultCode == ChatWindow.RESULT_OK){
+            String PassMessage = data.getStringExtra("message");
+            String PassID = data.getStringExtra("ID");
+
+            onDeleteItem(Integer.valueOf(PassID));
+
+        }
+    }
+//delete item in the database
+//update listview
+//remove the Fragment from FragmentTransaction
+    public void onDeleteItem(int pos){
+        db.delete(cdbHelper.TABLE_NAME,cdbHelper.ID_HEADER + "="+pos,null);
+        sendList.remove(pos);
+        transaction.remove(newFragment);
+
     }
 
     @Override

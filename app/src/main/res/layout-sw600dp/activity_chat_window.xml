@@ -15,10 +15,12 @@
 
     <FrameLayout
         android:id="@+id/frameL"
-        android:layout_height="match_parent"
         android:layout_width="wrap_content"
-        android:layout_alignLeft="@+id/chatView"
-        />
+        android:layout_height="match_parent"
+        android:layout_above="@+id/sendButton"
+        android:layout_marginLeft="300dp"
+        android:layout_marginStart="0dp"
+        android:layout_toEndOf="@+id/chatView" />
 
 
     <EditText

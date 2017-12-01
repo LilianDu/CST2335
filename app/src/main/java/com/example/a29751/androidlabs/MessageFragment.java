@@ -7,11 +7,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.nio.channels.Channel;
+
 /**
  * Created by 29751 on 2017-11-28.
  */
 
 public class MessageFragment extends Fragment {
+
+   /* public MessageFragment(ChatWindow cw) {
+        if(cw!= null){
+            //tablet
+        }else{
+            //phone
+        }
+    }*/
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
