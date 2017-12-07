@@ -32,4 +32,15 @@
     <string name="delButton">删除这条消息</string>
     <string name="textId">第几条消息 </string>
     <string name="textMessage">在这里输入消息 </string>
+
+    <string name="title_one">购物车</string>
+    <string name="title_two">访问</string>
+    <string name="title_three">毕业</string>
+    <string name="title_about">设置</string>
+
+    <string name="dialogTitle">你要返回吗？</string>
+    <string name="graTitle">从哪毕业 </string>
+    <string name="ok">是</string>
+    <string name="cancel">否</string>
+
 </resources>

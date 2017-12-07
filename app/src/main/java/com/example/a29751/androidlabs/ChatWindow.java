@@ -37,8 +37,9 @@ public class ChatWindow extends AppCompatActivity {
     public Cursor cur;
     public boolean isFrameExist;
     private final int RQCODE = 10;
-    FragmentTransaction transaction;
-    MessageFragment newFragment;
+    private FragmentTransaction transaction;
+    private MessageFragment newFragment;
+    private ChatAdapter messageAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,16 +49,7 @@ public class ChatWindow extends AppCompatActivity {
         Button btSend = (Button)findViewById(R.id.sendButton);
        //Lab7
         isFrameExist = (FrameLayout)findViewById(R.id.frameL)!=null;
-
-        if(isFrameExist){//tablet layout-at least 600 pixels
-
-        }else{//phone layout
-
-        }
-
-
-
-        final ChatAdapter messageAdapter = new ChatAdapter(this);
+        messageAdapter = new ChatAdapter(this);
         listView.setAdapter(messageAdapter);
 //database processing...
         Log.i("ChatWindow","newHelper");
@@ -94,6 +86,7 @@ public class ChatWindow extends AppCompatActivity {
                 //Then insert
                 db.insert(cdbHelper.TABLE_NAME,null , newData);
 
+                cur = db.rawQuery("select * from " + cdbHelper.TABLE_NAME,null);
                 edText.setText("");
             }
         });
@@ -104,16 +97,17 @@ public class ChatWindow extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle args = new Bundle();
-                String message = cur.getString(position);
+                String message = messageAdapter.getItem(position);
                 args.putString("message",message);
                 args.putLong("ID",id);
+                args.putBoolean("Boolean",isFrameExist);
                 if(isFrameExist){//tablet layout-at least 600 pixels
-                    newFragment = new MessageFragment(ChatWindow.this);
+                    newFragment = new MessageFragment();
 
                     newFragment.setArguments(args);
 
                     transaction = getFragmentManager().beginTransaction();
-                    //transaction.add(R.id.frameL,newFragment);
+                    // transaction.add(R.id.frameL,newFragment);
                     transaction.replace(R.id.frameL, newFragment);
                     transaction.addToBackStack(null);
 
@@ -121,13 +115,17 @@ public class ChatWindow extends AppCompatActivity {
                     transaction.commit();
                 }else//phone layout
                 {
-                    startActivityForResult(new Intent(ChatWindow.this, MessageDetails.class), RQCODE, args);
+                    Intent newIntent = new Intent(ChatWindow.this, MessageDetails.class);
+                    newIntent.putExtras(args);
+                    startActivityForResult(newIntent, RQCODE, args);
+
                 }
 
 
             }
         });
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -136,22 +134,17 @@ public class ChatWindow extends AppCompatActivity {
             Log.i(ACTIVITY_NAME,"Returned to chatWindow.onActivityResult");
         }
         if(resultCode == ChatWindow.RESULT_OK){
-            String PassMessage = data.getStringExtra("message");
-            String PassID = data.getStringExtra("ID");
 
-            onDeleteItem(Integer.valueOf(PassID));
+            long passID = data.getLongExtra("Delete",-1);
 
+            db.delete(cdbHelper.TABLE_NAME,cdbHelper.ID_HEADER + "="+passID,null);
+
+            finish();
+            Intent intent = getIntent();
+            startActivity(intent);
         }
     }
-//delete item in the database
-//update listview
-//remove the Fragment from FragmentTransaction
-    public void onDeleteItem(int pos){
-        db.delete(cdbHelper.TABLE_NAME,cdbHelper.ID_HEADER + "="+pos,null);
-        sendList.remove(pos);
-        transaction.remove(newFragment);
 
-    }
 
     @Override
     protected void onDestroy(){

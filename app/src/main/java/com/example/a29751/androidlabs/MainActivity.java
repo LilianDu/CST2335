@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,6 +46,17 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this,WeatherForecast.class));
                 Log.i(ACTIVE_NAME, "User clicked WeatherForecast");
+            }
+        });
+
+
+        Button toolbarBtn = (Button) findViewById(R.id.btn_Toolbar);
+        toolbarBtn.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,TestToolbar.class));
+                Log.i(ACTIVE_NAME, "User clicked TestToolbar");
             }
         });
     }

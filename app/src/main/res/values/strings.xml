@@ -30,4 +30,14 @@
     <string name="delButton">DELETE THIS MESSAGE</string>
     <string name="textId">ID= </string>
     <string name="textMessage">MessageHere </string>
+    <string name="title_activity_test_toolbar">TestToolbar</string>
+
+    <string name="title_one">Cart</string>
+    <string name="title_two">Visit</string>
+    <string name="title_three">Graduation</string>
+    <string name="title_about">Settings</string>
+    <string name="dialogTitle">Do you want to go back?</string>
+    <string name="graTitle">Graduation from </string>
+    <string name="ok">Yes</string>
+    <string name="cancel">No</string>
 </resources>
